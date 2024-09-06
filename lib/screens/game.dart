@@ -39,7 +39,7 @@ class _GameScreenState extends State<GameScreen> {
               flex: 3,
               child: GridView.builder(
                   itemCount: 9,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3),
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
@@ -55,7 +55,7 @@ class _GameScreenState extends State<GameScreen> {
                         child: Center(
                           child: Text(
                             displayXO[index],
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.redAccent,
                                 fontFamily: 'Coiny',
                                 fontSize: 64),
@@ -94,7 +94,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] == displayXO[2] &&
         displayXO[0] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ' + displayXO[0] + ' Ganhou!';
+        resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
       });
     }
 
@@ -103,7 +103,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[3] == displayXO[5] &&
         displayXO[3] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ' + displayXO[3] + ' Ganhou!';
+        resultDeclaration = 'O jogador ${displayXO[3]} Ganhou!';
       });
     }
 
@@ -112,7 +112,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[6] == displayXO[8] &&
         displayXO[6] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ' + displayXO[6] + ' Ganhou!';
+        resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
       });
     }
 
@@ -121,7 +121,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] == displayXO[6] &&
         displayXO[0] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ' + displayXO[0] + ' Ganhou!';
+        resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
       });
     }
 
@@ -130,7 +130,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[1] == displayXO[7] &&
         displayXO[1] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ' + displayXO[1] + ' Ganhou!';
+        resultDeclaration = 'O jogador ${displayXO[1]} Ganhou!';
       });
     }
 
@@ -139,7 +139,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[2] == displayXO[8] &&
         displayXO[2] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ' + displayXO[2] + ' Ganhou!';
+        resultDeclaration = 'O jogador ${displayXO[2]} Ganhou!';
       });
     }
 
@@ -148,7 +148,16 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] == displayXO[8] &&
         displayXO[0] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ' + displayXO[0] + ' Ganhou!';
+        resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
+      });
+    }
+
+    //Segunda Diagonal
+    if (displayXO[6] == displayXO[4] &&
+        displayXO[6] == displayXO[2] &&
+        displayXO[6] != '') {
+      setState(() {
+        resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
       });
     }
   }
