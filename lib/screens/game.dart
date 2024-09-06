@@ -21,8 +21,11 @@ class _GameScreenState extends State<GameScreen> {
     '',
   ];
 
+  int oScore = 0;
+  int xScore = 0;
+  int filledBoxes = 0;
   String resultDeclaration = '';
-
+  bool winerFound = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,9 +34,56 @@ class _GameScreenState extends State<GameScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const Expanded(
+            Expanded(
               flex: 1,
-              child: Center(child: Text('Placar')),
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Jogador O',
+                          style: TextStyle(
+                              fontFamily: 'Coiny',
+                              color: Colors.white,
+                              fontSize: 20),
+                        ),
+                        Text(
+                          oScore.toString(),
+                          style: TextStyle(
+                              fontFamily: 'Coiny',
+                              color: Colors.white,
+                              fontSize: 40),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Jogador X',
+                          style: TextStyle(
+                              fontFamily: 'Coiny',
+                              color: Colors.white,
+                              fontSize: 20),
+                        ),
+                        Text(
+                          xScore.toString(),
+                          style: TextStyle(
+                              fontFamily: 'Coiny',
+                              color: Colors.white,
+                              fontSize: 40),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
             Expanded(
               flex: 3,
@@ -67,7 +117,39 @@ class _GameScreenState extends State<GameScreen> {
             ),
             Expanded(
               flex: 2,
-              child: Text(resultDeclaration),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      resultDeclaration,
+                      style: TextStyle(
+                          fontFamily: 'Coiny',
+                          color: Colors.white,
+                          fontSize: 25),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.yellow,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 16),
+                        ),
+                        onPressed: () {
+                          _limparTela();
+                        },
+                        child: Text(
+                          'Jogar denovo!',
+                          style: TextStyle(
+                              color: Colors.redAccent,
+                              fontFamily: 'Coiny',
+                              fontSize: 20),
+                        ))
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -79,8 +161,10 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       if (oTurn && displayXO[index] == '') {
         displayXO[index] = 'O';
+        filledBoxes++;
       } else if (!oTurn && displayXO[index] == '') {
         displayXO[index] = 'X';
+        filledBoxes++;
       }
 
       oTurn = !oTurn;
@@ -95,6 +179,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
+        _updateScore(displayXO[0]);
       });
     }
 
@@ -104,6 +189,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[3] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[3]} Ganhou!';
+        _updateScore(displayXO[3]);
       });
     }
 
@@ -113,6 +199,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[6] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
+        _updateScore(displayXO[6]);
       });
     }
 
@@ -122,6 +209,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
+        _updateScore(displayXO[0]);
       });
     }
 
@@ -131,6 +219,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[1] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[1]} Ganhou!';
+        _updateScore(displayXO[1]);
       });
     }
 
@@ -140,6 +229,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[2] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[2]} Ganhou!';
+        _updateScore(displayXO[2]);
       });
     }
 
@@ -149,6 +239,7 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
+        _updateScore(displayXO[0]);
       });
     }
 
@@ -158,7 +249,32 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[6] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
+        _updateScore(displayXO[6]);
       });
     }
+    if (!winerFound && filledBoxes == 9) {
+      setState(() {
+        resultDeclaration = 'Ninguém ganhou!';
+      });
+    }
+  }
+
+  void _updateScore(String winner) {
+    if (winner == 'O') {
+      oScore++;
+    } else if (winner == 'X') {
+      xScore++;
+    }
+    winerFound = true;
+  }
+
+  void _limparTela() {
+    setState(() {
+      for (int i = 0; i < 9; i++) {
+        displayXO[i] = '';
+      }
+      resultDeclaration = '';
+    });
+    filledBoxes = 0;
   }
 }
