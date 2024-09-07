@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
@@ -20,12 +22,38 @@ class _GameScreenState extends State<GameScreen> {
     '',
     '',
   ];
+  List<int> matchedIndexes = [];
+  int attemps = 0;
 
   int oScore = 0;
   int xScore = 0;
   int filledBoxes = 0;
   String resultDeclaration = '';
   bool winerFound = false;
+
+  static const maxSeconds = 30;
+  int seconds = maxSeconds;
+  Timer? timer;
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        if (seconds > 0) {
+          seconds--;
+        } else {
+          stopTimer();
+        }
+      });
+    });
+  }
+
+  void stopTimer() {
+    resetTimer();
+    timer?.cancel();
+  }
+
+  void resetTimer() => seconds = maxSeconds;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,53 +64,51 @@ class _GameScreenState extends State<GameScreen> {
           children: [
             Expanded(
               flex: 1,
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Jogador O',
-                          style: TextStyle(
-                              fontFamily: 'Coiny',
-                              color: Colors.white,
-                              fontSize: 20),
-                        ),
-                        Text(
-                          oScore.toString(),
-                          style: TextStyle(
-                              fontFamily: 'Coiny',
-                              color: Colors.white,
-                              fontSize: 40),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Jogador X',
-                          style: TextStyle(
-                              fontFamily: 'Coiny',
-                              color: Colors.white,
-                              fontSize: 20),
-                        ),
-                        Text(
-                          xScore.toString(),
-                          style: TextStyle(
-                              fontFamily: 'Coiny',
-                              color: Colors.white,
-                              fontSize: 40),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text(
+                        'Jogador O',
+                        style: TextStyle(
+                            fontFamily: 'Coiny',
+                            color: Colors.white,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        oScore.toString(),
+                        style: const TextStyle(
+                            fontFamily: 'Coiny',
+                            color: Colors.white,
+                            fontSize: 40),
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 60,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text(
+                        'Jogador X',
+                        style: TextStyle(
+                            fontFamily: 'Coiny',
+                            color: Colors.white,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        xScore.toString(),
+                        style: const TextStyle(
+                            fontFamily: 'Coiny',
+                            color: Colors.white,
+                            fontSize: 40),
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
             Expanded(
@@ -123,30 +149,15 @@ class _GameScreenState extends State<GameScreen> {
                   children: [
                     Text(
                       resultDeclaration,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontFamily: 'Coiny',
                           color: Colors.white,
                           fontSize: 25),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 16),
-                        ),
-                        onPressed: () {
-                          _limparTela();
-                        },
-                        child: Text(
-                          'Jogar denovo!',
-                          style: TextStyle(
-                              color: Colors.redAccent,
-                              fontFamily: 'Coiny',
-                              fontSize: 20),
-                        ))
+                    _buildTimer()
                   ],
                 ),
               ),
@@ -158,18 +169,22 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _tapped(int index) {
-    setState(() {
-      if (oTurn && displayXO[index] == '') {
-        displayXO[index] = 'O';
-        filledBoxes++;
-      } else if (!oTurn && displayXO[index] == '') {
-        displayXO[index] = 'X';
-        filledBoxes++;
-      }
+    final isRunning = timer == null ? false : timer!.isActive;
 
-      oTurn = !oTurn;
-      _checkWinner();
-    });
+    if (isRunning) {
+      setState(() {
+        if (oTurn && displayXO[index] == '') {
+          displayXO[index] = 'O';
+          filledBoxes++;
+        } else if (!oTurn && displayXO[index] == '') {
+          displayXO[index] = 'X';
+          filledBoxes++;
+        }
+
+        oTurn = !oTurn;
+        _checkWinner();
+      });
+    }
   }
 
   void _checkWinner() {
@@ -179,6 +194,8 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
+        matchedIndexes.addAll([0, 1, 2]);
+        stopTimer();
         _updateScore(displayXO[0]);
       });
     }
@@ -189,6 +206,8 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[3] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[3]} Ganhou!';
+        matchedIndexes.addAll([3, 4, 5]);
+        stopTimer();
         _updateScore(displayXO[3]);
       });
     }
@@ -199,6 +218,8 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[6] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
+        matchedIndexes.addAll([6, 7, 8]);
+        stopTimer();
         _updateScore(displayXO[6]);
       });
     }
@@ -209,6 +230,8 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
+        matchedIndexes.addAll([0, 3, 6]);
+        stopTimer();
         _updateScore(displayXO[0]);
       });
     }
@@ -219,6 +242,8 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[1] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[1]} Ganhou!';
+        matchedIndexes.addAll([1, 4, 7]);
+        stopTimer();
         _updateScore(displayXO[1]);
       });
     }
@@ -229,6 +254,8 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[2] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[2]} Ganhou!';
+        matchedIndexes.addAll([2, 5, 8]);
+        stopTimer();
         _updateScore(displayXO[2]);
       });
     }
@@ -239,6 +266,8 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
+        matchedIndexes.addAll([0, 4, 8]);
+        stopTimer();
         _updateScore(displayXO[0]);
       });
     }
@@ -249,12 +278,15 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[6] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
+        matchedIndexes.addAll([6, 4, 2]);
+        stopTimer();
         _updateScore(displayXO[6]);
       });
     }
-    if (!winerFound && filledBoxes == 9) {
+    if (filledBoxes == 9) {
       setState(() {
         resultDeclaration = 'Ninguém ganhou!';
+        stopTimer();
       });
     }
   }
@@ -276,5 +308,47 @@ class _GameScreenState extends State<GameScreen> {
       resultDeclaration = '';
     });
     filledBoxes = 0;
+  }
+
+  Widget _buildTimer() {
+    final isRunning = timer == null ? false : timer!.isActive;
+
+    return isRunning
+        ? SizedBox(
+            width: 100,
+            height: 100,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CircularProgressIndicator(
+                  value: 1 - seconds / maxSeconds,
+                  valueColor: const AlwaysStoppedAnimation(Colors.white),
+                  strokeWidth: 8,
+                  backgroundColor: Colors.redAccent,
+                ),
+                Center(
+                  child: Text(
+                    '$seconds',
+                    style: const TextStyle(
+                        fontFamily: 'coiny', color: Colors.white, fontSize: 40),
+                  ),
+                ),
+              ],
+            ))
+        : ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.yellow,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            ),
+            onPressed: () {
+              startTimer();
+              _limparTela();
+              attemps++;
+            },
+            child: Text(
+              attemps == 0 ? 'Jogar' : 'Jogar denovo!',
+              style: const TextStyle(
+                  color: Colors.redAccent, fontFamily: 'Coiny', fontSize: 20),
+            ));
   }
 }
