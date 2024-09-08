@@ -22,7 +22,6 @@ class _GameScreenState extends State<GameScreen> {
     '',
     '',
   ];
-  List<int> matchedIndexes = [];
   int attemps = 0;
 
   int oScore = 0;
@@ -193,7 +192,6 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
-        matchedIndexes.addAll([0, 1, 2]);
         stopTimer();
         _updateScore(displayXO[0]);
       });
@@ -205,7 +203,6 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[3] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[3]} Ganhou!';
-        matchedIndexes.addAll([3, 4, 5]);
         stopTimer();
         _updateScore(displayXO[3]);
       });
@@ -217,7 +214,6 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[6] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
-        matchedIndexes.addAll([6, 7, 8]);
         stopTimer();
         _updateScore(displayXO[6]);
       });
@@ -229,7 +225,6 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
-        matchedIndexes.addAll([0, 3, 6]);
         stopTimer();
         _updateScore(displayXO[0]);
       });
@@ -241,7 +236,6 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[1] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[1]} Ganhou!';
-        matchedIndexes.addAll([1, 4, 7]);
         stopTimer();
         _updateScore(displayXO[1]);
       });
@@ -253,7 +247,6 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[2] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[2]} Ganhou!';
-        matchedIndexes.addAll([2, 5, 8]);
         stopTimer();
         _updateScore(displayXO[2]);
       });
@@ -265,7 +258,6 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
-        matchedIndexes.addAll([0, 4, 8]);
         stopTimer();
         _updateScore(displayXO[0]);
       });
@@ -277,7 +269,6 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[6] != '') {
       setState(() {
         resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
-        matchedIndexes.addAll([6, 4, 2]);
         stopTimer();
         _updateScore(displayXO[6]);
       });
