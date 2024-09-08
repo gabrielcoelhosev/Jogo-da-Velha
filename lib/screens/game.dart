@@ -57,7 +57,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.redAccent,
+      backgroundColor: Colors.black,
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -125,14 +125,13 @@ class _GameScreenState extends State<GameScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            border:
-                                Border.all(width: 5, color: Colors.redAccent),
-                            color: Colors.yellow),
+                            border: Border.all(width: 5, color: Colors.black),
+                            color: Colors.green),
                         child: Center(
                           child: Text(
                             displayXO[index],
                             style: const TextStyle(
-                                color: Colors.redAccent,
+                                color: Colors.white,
                                 fontFamily: 'Coiny',
                                 fontSize: 64),
                           ),
@@ -324,7 +323,7 @@ class _GameScreenState extends State<GameScreen> {
                   value: 1 - seconds / maxSeconds,
                   valueColor: const AlwaysStoppedAnimation(Colors.white),
                   strokeWidth: 8,
-                  backgroundColor: Colors.redAccent,
+                  backgroundColor: Colors.black,
                 ),
                 Center(
                   child: Text(
@@ -337,7 +336,7 @@ class _GameScreenState extends State<GameScreen> {
             ))
         : ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.yellow,
+              backgroundColor: Colors.green,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
             onPressed: () {
@@ -348,7 +347,7 @@ class _GameScreenState extends State<GameScreen> {
             child: Text(
               attemps == 0 ? 'Jogar' : 'Jogar denovo!',
               style: const TextStyle(
-                  color: Colors.redAccent, fontFamily: 'Coiny', fontSize: 20),
+                  color: Colors.white, fontFamily: 'Coiny', fontSize: 20),
             ));
   }
 }
