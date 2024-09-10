@@ -111,7 +111,7 @@ class _GameScreenState extends State<GameScreen> {
               ),
             ),
             Expanded(
-              flex: 3,
+              flex: 4,
               child: GridView.builder(
                   itemCount: 9,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
