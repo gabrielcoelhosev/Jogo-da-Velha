@@ -1,15 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+class HomeWidget extends StatefulWidget {
+  const HomeWidget({super.key});
 
   @override
-  State<GameScreen> createState() => _GameScreenState();
+  State<HomeWidget> createState() => _HomeWidgetState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _HomeWidgetState extends State<HomeWidget> {
   bool oTurn = true;
   List<String> displayXO = [
     '',
@@ -22,94 +21,79 @@ class _GameScreenState extends State<GameScreen> {
     '',
     '',
   ];
-  int attemps = 0;
 
-  int oScore = 0;
-  int xScore = 0;
-  int filledBoxes = 0;
-  String resultDeclaration = '';
-  bool winerFound = false;
+  Timer? _timer;
+  int seconds = 30;
 
-  static const maxSeconds = 30;
-  int seconds = maxSeconds;
-  Timer? timer;
+  int caixasPreenchidas = 0;
+  int placarO = 0;
+  int placarX = 0;
 
-  void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
-        if (seconds > 0) {
-          seconds--;
-        } else {
-          stopTimer();
-        }
-      });
-    });
-  }
+  bool ganharam = false;
 
-  void stopTimer() {
-    resetTimer();
-    timer?.cancel();
-  }
-
-  void resetTimer() => seconds = maxSeconds;
+  String ganhador = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.black38,
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const Text(
-                        'Jogador O',
-                        style: TextStyle(
-                            fontFamily: 'Coiny',
-                            color: Colors.white,
-                            fontSize: 20),
-                      ),
-                      Text(
-                        oScore.toString(),
-                        style: const TextStyle(
-                            fontFamily: 'Coiny',
-                            color: Colors.white,
-                            fontSize: 40),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 60,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const Text(
-                        'Jogador X',
-                        style: TextStyle(
-                            fontFamily: 'Coiny',
-                            color: Colors.white,
-                            fontSize: 20),
-                      ),
-                      Text(
-                        xScore.toString(),
-                        style: const TextStyle(
-                            fontFamily: 'Coiny',
-                            color: Colors.white,
-                            fontSize: 40),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
+                child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'O',
+                      style: TextStyle(
+                          fontSize: 30, color: Colors.red, fontFamily: 'Coiny'),
+                    ),
+                    Text(
+                      placarO.toString(),
+                      style: const TextStyle(
+                          fontSize: 35, color: Colors.red, fontFamily: 'Coiny'),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  width: 40,
+                ),
+                IconButton(
+                    onPressed: () {
+                      _limparPlacar();
+                    },
+                    icon: const Icon(
+                      Icons.cleaning_services_outlined,
+                      color: Colors.red,
+                    )),
+                const SizedBox(
+                  width: 40,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'X',
+                      style: TextStyle(
+                          fontSize: 30, color: Colors.red, fontFamily: 'Coiny'),
+                    ),
+                    Text(
+                      placarX.toString(),
+                      style: const TextStyle(
+                          fontSize: 35, color: Colors.red, fontFamily: 'Coiny'),
+                    )
+                  ],
+                ),
+              ],
+            )),
             Expanded(
               flex: 4,
               child: GridView.builder(
@@ -125,14 +109,14 @@ class _GameScreenState extends State<GameScreen> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(width: 5, color: Colors.black),
-                            color: Colors.green),
+                            color: Colors.pink),
                         child: Center(
                           child: Text(
                             displayXO[index],
                             style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Coiny',
-                                fontSize: 64),
+                                color: Colors.black,
+                                fontSize: 40,
+                                fontFamily: 'Coiny'),
                           ),
                         ),
                       ),
@@ -140,26 +124,25 @@ class _GameScreenState extends State<GameScreen> {
                   }),
             ),
             Expanded(
-              flex: 2,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      resultDeclaration,
-                      style: const TextStyle(
-                          fontFamily: 'Coiny',
-                          color: Colors.white,
-                          fontSize: 25),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    _buildTimer()
-                  ],
-                ),
+              child: Text(
+                ganhador,
+                style: const TextStyle(
+                    color: Colors.red, fontSize: 27, fontFamily: 'Coiny'),
               ),
             ),
+            Text(
+              seconds.toString(),
+              style: const TextStyle(
+                  fontFamily: 'Coiny', color: Colors.red, fontSize: 20),
+            ),
+            IconButton(
+                onPressed: () {
+                  _limparTela();
+                },
+                icon: const Icon(
+                  Icons.cleaning_services_outlined,
+                  color: Colors.red,
+                ))
           ],
         ),
       ),
@@ -167,127 +150,110 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _tapped(int index) {
-    final isRunning = timer == null ? false : timer!.isActive;
-
-    if (isRunning) {
-      setState(() {
-        if (oTurn && displayXO[index] == '') {
+    setState(() {
+      if (displayXO[index] == '') {
+        if (oTurn) {
           displayXO[index] = 'O';
-          filledBoxes++;
-        } else if (!oTurn && displayXO[index] == '') {
+        } else {
           displayXO[index] = 'X';
-          filledBoxes++;
+        }
+        caixasPreenchidas++;
+        oTurn = !oTurn;
+
+        if (caixasPreenchidas == 1) {
+          _startTimer(); // Inicia o timer na primeira jogada
         }
 
-        oTurn = !oTurn;
         _checkWinner();
-      });
-    }
+      }
+    });
   }
 
   void _checkWinner() {
-    //Primeira Linha
+    // Checa todas as combinações de vitória possíveis
     if (displayXO[0] == displayXO[1] &&
         displayXO[0] == displayXO[2] &&
         displayXO[0] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
-        stopTimer();
-        _updateScore(displayXO[0]);
+        ganhador = 'O ganhador foi o ${displayXO[0]}';
+        _placar(displayXO[0]);
+        ganharam = true;
+        _resetTimer();
       });
     }
-
-    //Segunda Linha
     if (displayXO[3] == displayXO[4] &&
         displayXO[3] == displayXO[5] &&
         displayXO[3] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ${displayXO[3]} Ganhou!';
-        stopTimer();
-        _updateScore(displayXO[3]);
+        ganhador = 'O ganhador foi o ${displayXO[3]}';
+        _placar(displayXO[3]);
+        ganharam = true;
+        _resetTimer();
       });
     }
-
-    //Terceira Linha
     if (displayXO[6] == displayXO[7] &&
         displayXO[6] == displayXO[8] &&
         displayXO[6] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
-        stopTimer();
-        _updateScore(displayXO[6]);
+        ganhador = 'O ganhador foi o ${displayXO[6]}';
+        _placar(displayXO[6]);
+        ganharam = true;
+        _resetTimer();
       });
     }
-
-    //Primeira Coluna
     if (displayXO[0] == displayXO[3] &&
         displayXO[0] == displayXO[6] &&
         displayXO[0] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
-        stopTimer();
-        _updateScore(displayXO[0]);
+        ganhador = 'O ganhador foi o ${displayXO[0]}';
+        _placar(displayXO[0]);
+        ganharam = true;
+        _resetTimer();
       });
     }
-
-    //Segunda Coluna
     if (displayXO[1] == displayXO[4] &&
         displayXO[1] == displayXO[7] &&
         displayXO[1] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ${displayXO[1]} Ganhou!';
-        stopTimer();
-        _updateScore(displayXO[1]);
+        ganhador = 'O ganhador foi o ${displayXO[1]}';
+        _placar(displayXO[1]);
+        ganharam = true;
+        _resetTimer();
       });
     }
-
-    //Terceira Coluna
     if (displayXO[2] == displayXO[5] &&
         displayXO[2] == displayXO[8] &&
         displayXO[2] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ${displayXO[2]} Ganhou!';
-        stopTimer();
-        _updateScore(displayXO[2]);
+        ganhador = 'O ganhador foi o ${displayXO[2]}';
+        _placar(displayXO[2]);
+        ganharam = true;
+        _resetTimer();
       });
     }
-
-    //Primeira Diagonal
     if (displayXO[0] == displayXO[4] &&
         displayXO[0] == displayXO[8] &&
         displayXO[0] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ${displayXO[0]} Ganhou!';
-        stopTimer();
-        _updateScore(displayXO[0]);
+        ganhador = 'O ganhador foi o ${displayXO[0]}';
+        _placar(displayXO[0]);
+        ganharam = true;
+        _resetTimer();
       });
     }
-
-    //Segunda Diagonal
-    if (displayXO[6] == displayXO[4] &&
-        displayXO[6] == displayXO[2] &&
-        displayXO[6] != '') {
+    if (displayXO[2] == displayXO[4] &&
+        displayXO[2] == displayXO[6] &&
+        displayXO[2] != '') {
       setState(() {
-        resultDeclaration = 'O jogador ${displayXO[6]} Ganhou!';
-        stopTimer();
-        _updateScore(displayXO[6]);
+        ganhador = 'O ganhador foi o ${displayXO[2]}';
+        _placar(displayXO[2]);
+        ganharam = true;
+        _resetTimer();
       });
+    } else if (caixasPreenchidas == 9 && ganharam == false) {
+      ganhador = 'Deu velha!';
+      _resetTimer();
     }
-    if (filledBoxes == 9) {
-      setState(() {
-        resultDeclaration = 'Ninguém ganhou!';
-        stopTimer();
-      });
-    }
-  }
-
-  void _updateScore(String winner) {
-    if (winner == 'O') {
-      oScore++;
-    } else if (winner == 'X') {
-      xScore++;
-    }
-    winerFound = true;
   }
 
   void _limparTela() {
@@ -295,50 +261,127 @@ class _GameScreenState extends State<GameScreen> {
       for (int i = 0; i < 9; i++) {
         displayXO[i] = '';
       }
-      resultDeclaration = '';
+      ganhador = '';
+      oTurn = true;
+      ganharam = false;
+      seconds = 30;
+      caixasPreenchidas = 0;
+      _timer?.cancel();
     });
-    filledBoxes = 0;
   }
 
-  Widget _buildTimer() {
-    final isRunning = timer == null ? false : timer!.isActive;
+  void _placar(String ganhador) {
+    setState(() {
+      if (ganhador == 'X') {
+        placarX++;
+      } else if (ganhador == 'O') {
+        placarO++;
+      }
+    });
+    _reconhecerVencedor();
+  }
 
-    return isRunning
-        ? SizedBox(
-            width: 100,
-            height: 100,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                CircularProgressIndicator(
-                  value: 1 - seconds / maxSeconds,
-                  valueColor: const AlwaysStoppedAnimation(Colors.white),
-                  strokeWidth: 8,
-                  backgroundColor: Colors.black,
-                ),
-                Center(
-                  child: Text(
-                    '$seconds',
-                    style: const TextStyle(
-                        fontFamily: 'coiny', color: Colors.white, fontSize: 40),
-                  ),
-                ),
-              ],
-            ))
-        : ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+  void _limparPlacar() {
+    setState(() {
+      placarO = 0;
+      placarX = 0;
+    });
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (seconds > 0) {
+          seconds--;
+        } else {
+          _resetTimer();
+        }
+
+        if (seconds == 0) {
+          _AcabouTempo(context);
+        }
+      });
+    });
+  }
+
+  void _resetTimer() {
+    _timer?.cancel();
+  }
+
+  void _AcabouTempo(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alerta'),
+          content: const Text('Acabou o Tempo!'),
+          actions: [
+            TextButton(
+              child: const Text('Fechar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _limparTela();
+              },
             ),
-            onPressed: () {
-              startTimer();
-              _limparTela();
-              attemps++;
-            },
-            child: Text(
-              attemps == 0 ? 'Jogar' : 'Jogar denovo!',
-              style: const TextStyle(
-                  color: Colors.white, fontFamily: 'Coiny', fontSize: 20),
-            ));
+          ],
+        );
+      },
+    );
+  }
+
+  void _reconhecerVencedor() {
+    if (placarO == 10) {
+      setState(() {
+        _JogadorOGanhou(context);
+      });
+    } else if (placarX == 10) {
+      setState(() {
+        _JogadorXGanhou(context);
+      });
+    }
+  }
+
+  void _JogadorOGanhou(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Vencedor'),
+          content: const Text('O jogador O ganhou!'),
+          actions: [
+            TextButton(
+              child: const Text('Fechar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _limparTela();
+                _limparPlacar();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _JogadorXGanhou(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Vencedor'),
+          content: const Text('O jogador X ganhou!'),
+          actions: [
+            TextButton(
+              child: const Text('Fechar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _limparTela();
+                _limparPlacar();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
