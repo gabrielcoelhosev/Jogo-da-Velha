@@ -39,110 +39,132 @@ class _HomeWidgetState extends State<HomeWidget> {
       backgroundColor: Colors.black38,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-                child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Image.network(
+                'https://images.unsplash.com/photo-1567360425618-1594206637d2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8YmxhY2slMjBhbmQlMjByZWQlMjB3YWxscGFwZXJ8ZW58MHx8MHx8fDA%3D',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Column(
               children: [
-                Column(
+                Expanded(
+                    child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'O',
-                      style: TextStyle(
-                          fontSize: 30, color: Colors.red, fontFamily: 'Coiny'),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'O',
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.red,
+                              fontFamily: 'Coiny'),
+                        ),
+                        Text(
+                          placarO.toString(),
+                          style: const TextStyle(
+                              fontSize: 35,
+                              color: Colors.red,
+                              fontFamily: 'Coiny'),
+                        )
+                      ],
                     ),
-                    Text(
-                      placarO.toString(),
-                      style: const TextStyle(
-                          fontSize: 35, color: Colors.red, fontFamily: 'Coiny'),
-                    )
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          _limparPlacar();
+                        },
+                        icon: const Icon(
+                          Icons.cleaning_services_outlined,
+                          color: Colors.red,
+                        )),
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'X',
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.red,
+                              fontFamily: 'Coiny'),
+                        ),
+                        Text(
+                          placarX.toString(),
+                          style: const TextStyle(
+                              fontSize: 35,
+                              color: Colors.red,
+                              fontFamily: 'Coiny'),
+                        )
+                      ],
+                    ),
                   ],
+                )),
+                Expanded(
+                  flex: 4,
+                  child: GridView.builder(
+                      itemCount: 9,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3),
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            _tapped(index);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border:
+                                    Border.all(width: 5, color: Colors.black),
+                                color: Colors.red),
+                            child: Center(
+                              child: Text(
+                                displayXO[index],
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 40,
+                                    fontFamily: 'Coiny'),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
                 ),
-                const SizedBox(
-                  width: 40,
+                Expanded(
+                  child: Text(
+                    ganhador,
+                    style: const TextStyle(
+                        color: Colors.red, fontSize: 27, fontFamily: 'Coiny'),
+                  ),
+                ),
+                Text(
+                  seconds.toString(),
+                  style: const TextStyle(
+                      fontFamily: 'Coiny', color: Colors.red, fontSize: 20),
                 ),
                 IconButton(
                     onPressed: () {
-                      _limparPlacar();
+                      _limparTela();
                     },
                     icon: const Icon(
                       Icons.cleaning_services_outlined,
                       color: Colors.red,
-                    )),
-                const SizedBox(
-                  width: 40,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'X',
-                      style: TextStyle(
-                          fontSize: 30, color: Colors.red, fontFamily: 'Coiny'),
-                    ),
-                    Text(
-                      placarX.toString(),
-                      style: const TextStyle(
-                          fontSize: 35, color: Colors.red, fontFamily: 'Coiny'),
-                    )
-                  ],
-                ),
+                    ))
               ],
-            )),
-            Expanded(
-              flex: 4,
-              child: GridView.builder(
-                  itemCount: 9,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        _tapped(index);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(width: 5, color: Colors.black),
-                            color: Colors.pink),
-                        child: Center(
-                          child: Text(
-                            displayXO[index],
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 40,
-                                fontFamily: 'Coiny'),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
             ),
-            Expanded(
-              child: Text(
-                ganhador,
-                style: const TextStyle(
-                    color: Colors.red, fontSize: 27, fontFamily: 'Coiny'),
-              ),
-            ),
-            Text(
-              seconds.toString(),
-              style: const TextStyle(
-                  fontFamily: 'Coiny', color: Colors.red, fontSize: 20),
-            ),
-            IconButton(
-                onPressed: () {
-                  _limparTela();
-                },
-                icon: const Icon(
-                  Icons.cleaning_services_outlined,
-                  color: Colors.red,
-                ))
           ],
         ),
       ),
@@ -340,11 +362,11 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   void _reconhecerVencedor() {
-    if (placarO == 2) {
+    if (placarO == 10) {
       setState(() {
         _JogadorOGanhou(context);
       });
-    } else if (placarX == 2) {
+    } else if (placarX == 10) {
       setState(() {
         _JogadorXGanhou(context);
       });
