@@ -313,11 +313,21 @@ class _HomeWidgetState extends State<HomeWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Alerta'),
-          content: const Text('Acabou o Tempo!'),
+          backgroundColor: Colors.red,
+          title: const Text(
+            'Alerta',
+            style: TextStyle(color: Colors.black, fontFamily: 'Coiny'),
+          ),
+          content: const Text(
+            'Acabou o Tempo!',
+            style: TextStyle(color: Colors.black, fontFamily: 'Coiny'),
+          ),
           actions: [
             TextButton(
-              child: const Text('Fechar'),
+              child: const Text(
+                'Fechar',
+                style: TextStyle(color: Colors.black, fontFamily: 'Coiny'),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 _limparTela();
@@ -330,11 +340,11 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   void _reconhecerVencedor() {
-    if (placarO == 10) {
+    if (placarO == 2) {
       setState(() {
         _JogadorOGanhou(context);
       });
-    } else if (placarX == 10) {
+    } else if (placarX == 2) {
       setState(() {
         _JogadorXGanhou(context);
       });
@@ -346,11 +356,19 @@ class _HomeWidgetState extends State<HomeWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Vencedor'),
-          content: const Text('O jogador O ganhou!'),
+          backgroundColor: Colors.red,
+          title: const Text(
+            'Vencedor',
+            style: TextStyle(fontFamily: 'Coiny'),
+          ),
+          content: const Text('O jogador O ganhou!',
+              style: TextStyle(fontFamily: 'Coiny')),
           actions: [
             TextButton(
-              child: const Text('Fechar'),
+              child: const Text(
+                'Fechar',
+                style: TextStyle(color: Colors.black, fontFamily: 'Coiny'),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 _limparTela();
@@ -368,11 +386,21 @@ class _HomeWidgetState extends State<HomeWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Vencedor'),
-          content: const Text('O jogador X ganhou!'),
+          backgroundColor: Colors.red,
+          title: const Text(
+            'Vencedor',
+            style: TextStyle(color: Colors.black, fontFamily: 'Coiny'),
+          ),
+          content: const Text(
+            'O jogador X ganhou!',
+            style: TextStyle(color: Colors.black, fontFamily: 'Coiny'),
+          ),
           actions: [
             TextButton(
-              child: const Text('Fechar'),
+              child: const Text(
+                'Fechar',
+                style: TextStyle(color: Colors.black, fontFamily: 'Coiny'),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 _limparTela();
