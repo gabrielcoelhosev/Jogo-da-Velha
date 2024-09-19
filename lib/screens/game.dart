@@ -424,9 +424,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                 style: TextStyle(color: Colors.black, fontFamily: 'Coiny'),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
                 _limparTela();
                 _limparPlacar();
+                Navigator.of(context).pop();
               },
             ),
           ],
